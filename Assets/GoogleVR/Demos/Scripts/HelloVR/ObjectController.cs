@@ -42,6 +42,10 @@ namespace GoogleVR.HelloVR
         public float interactionTimer = 0f;
         private bool timerRunning = false;
 
+        GameObject[] expos;
+
+        AudioSource audioSource;
+
         void Update ()
         {
             if (timerRunning)
@@ -52,7 +56,16 @@ namespace GoogleVR.HelloVR
                     if (string.Compare(name, "Base")==0){
                         TeleportPlayer();
                     } else if (string.Compare(name, "Base")!=0){
-                        //
+                        if (!audioSource.isPlaying){
+                            foreach (GameObject expo in expos)
+                            {
+                                if(expo.GetComponent<AudioSource>().isPlaying){
+                                    expo.GetComponent<AudioSource>().Stop();
+                                    break;
+                                }
+                            }
+                            audioSource.Play();
+                        }
                     }
                 }
             }
@@ -155,6 +168,8 @@ namespace GoogleVR.HelloVR
             myRenderer = GetComponent<Renderer>();
             SetGazedAt(false);
             locomotion = FindObjectOfType<Locomotion>();
+            expos = GameObject.FindGameObjectsWithTag("Expo");
+            audioSource = GetComponent<AudioSource>();
         }
 
         public void TeleportPlayer ()
